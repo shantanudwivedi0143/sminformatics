@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sminformatics/static/css/main.274dda2e.css",
+    "main.js": "/sminformatics/static/js/main.d853accd.js",
+    "static/js/453.4d88bdf1.chunk.js": "/sminformatics/static/js/453.4d88bdf1.chunk.js",
+    "index.html": "/sminformatics/index.html",
+    "main.274dda2e.css.map": "/sminformatics/static/css/main.274dda2e.css.map",
+    "main.d853accd.js.map": "/sminformatics/static/js/main.d853accd.js.map",
+    "453.4d88bdf1.chunk.js.map": "/sminformatics/static/js/453.4d88bdf1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.274dda2e.css",
+    "static/js/main.d853accd.js"
+  ]
+}
