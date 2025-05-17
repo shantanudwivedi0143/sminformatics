@@ -8,9 +8,7 @@ const FactoryLayout = () => {
   const previewRef = useRef(null);
   const [modalImageIndex, setModalImageIndex] = useState(null);
   const factoryRef = useRef(null);
-
-const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
-
+  const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
 
   const lightPositions = [
     { top: "60%", left: "80%" }, // shipping
@@ -48,16 +46,14 @@ const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
       }
     };
 
-    // Update on load and on resize
     window.addEventListener("resize", updateContainerSize);
-    updateContainerSize(); // initial load
+    updateContainerSize();
 
     return () => {
       window.removeEventListener("resize", updateContainerSize);
     };
   }, []);
 
-  // Calculate light position based on container size
   const getLightPosition = (index) => {
     const pos = lightPositions[index];
     const top = (parseFloat(pos.top) / 100) * containerSize.height;
@@ -65,7 +61,6 @@ const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
     return { top, left };
   };
 
-  // Preview image positioning
   const getPreviewStyle = (index) => {
     const pos = lightPositions[index];
     const leftPercent = parseFloat(pos.left);
@@ -91,7 +86,7 @@ const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
       <div className="factory-container" ref={factoryRef}>
         <div className="image-wrapper">
           <img
-            src="/BackgroundImage.png"
+            src={`${process.env.PUBLIC_URL}/BackgroundImage.png`}
             alt="Factory Layout"
             className="factory-image"
           />
@@ -116,13 +111,13 @@ const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
             >
               <div className="image-hover-wrapper">
                 <img
-                  src={`/${sectionData[activeLight].image}`}
+                  src={`${process.env.PUBLIC_URL}/${sectionData[activeLight].image}`}
                   alt={`Preview ${activeLight + 1}`}
                   className="hover-image"
                   onClick={() => {
                     setModalImageIndex(activeLight);
-                    setSelectedFeatureIndex(0); // Reset to first feature on open
-                  }}                  
+                    setSelectedFeatureIndex(0);
+                  }}
                 />
                 <div className="hover-details">
                   <h4>{sectionData[activeLight].title} – Features</h4>
@@ -136,100 +131,101 @@ const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
             </div>
           )}
 
-
-{modalImageIndex !== null && (
-  <div className="modal-overlay" onClick={() => setModalImageIndex(null)}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <h3 className="modal-header">
-        {sectionData[modalImageIndex].title} – Automation Features
-      </h3>
-      <button
-        className="modal-close-btn"
-        onClick={() => {
-          setModalImageIndex(null);
-          setSelectedFeatureIndex(0);
-        }}
-      >
-        ✕
-      </button>
-
-      <div className="modal-body">
-        <div className="modal-image-wrapper">
-          <img
-            src={`/${sectionData[modalImageIndex].image}`}
-            alt={`Modal ${modalImageIndex + 1}`}
-          />
-        </div>
-
-        <div className="modal-right">
-          <div className="feature-buttons">
-            {sectionData[modalImageIndex].features.map((feature, index) => (
-              <div className="feature-line-button" key={index}>
-                <div
-                  className={`feature-line ${
-                    index === selectedFeatureIndex ? 'active' : 'inactive'
-                  }`}
-                />
+          {modalImageIndex !== null && (
+            <div className="modal-overlay" onClick={() => setModalImageIndex(null)}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <h3 className="modal-header">
+                  {sectionData[modalImageIndex].title} – Automation Features
+                </h3>
                 <button
-                  onClick={() => setSelectedFeatureIndex(index)}
-                  className={`feature-btn ${
-                    index === selectedFeatureIndex ? 'active' : ''
-                  }`}
+                  className="modal-close-btn"
+                  onClick={() => {
+                    setModalImageIndex(null);
+                    setSelectedFeatureIndex(0);
+                  }}
                 >
-                  {feature.title}
+                  ✕
                 </button>
+
+                <div className="modal-body">
+                  <div className="modal-image-wrapper">
+                    <img
+                      src={`${process.env.PUBLIC_URL}/${sectionData[modalImageIndex].image}`}
+                      alt={`Modal ${modalImageIndex + 1}`}
+                    />
+                  </div>
+
+                  <div className="modal-right">
+                    <div className="feature-buttons">
+                      {sectionData[modalImageIndex].features.map((feature, index) => (
+                        <div className="feature-line-button" key={index}>
+                          <div
+                            className={`feature-line ${
+                              index === selectedFeatureIndex ? 'active' : 'inactive'
+                            }`}
+                          />
+                          <button
+                            onClick={() => setSelectedFeatureIndex(index)}
+                            className={`feature-btn ${
+                              index === selectedFeatureIndex ? 'active' : ''
+                            }`}
+                          >
+                            {feature.title}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="model-card">
+                      <h3 style={{ color: '#0e1c33', fontStyle: 'oblique' }}>
+                        {sectionData[modalImageIndex].features[selectedFeatureIndex]?.title}
+                      </h3>
+                      <p style={{ marginRight: '10px' }}>
+                        {sectionData[modalImageIndex].features[selectedFeatureIndex]?.description
+                          ?.split('\n')
+                          .map((line, idx) => (
+                            <span key={idx}>
+                              {line}
+                              <br />
+                            </span>
+                          ))}
+                      </p>
+
+                      <div className="model-card-nav">
+                        <button
+                          onClick={() =>
+                            setSelectedFeatureIndex((prev) =>
+                              prev > 0
+                                ? prev - 1
+                                : sectionData[modalImageIndex].features.length - 1
+                            )
+                          }
+                        >
+                          ⬅
+                        </button>
+
+                        <span>
+                          {selectedFeatureIndex + 1} of {sectionData[modalImageIndex].features.length}
+                        </span>
+
+                        <button
+                          onClick={() =>
+                            setSelectedFeatureIndex((prev) =>
+                              prev < sectionData[modalImageIndex].features.length - 1
+                                ? prev + 1
+                                : 0
+                            )
+                          }
+                        >
+                          ➡
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-
-          <div className="model-card">
-            <h3 style={{color :'#0e1c33' , fontStyle:'oblique'}}>{sectionData[modalImageIndex].features[selectedFeatureIndex]?.title}</h3>
-            <p style={{marginRight :'10px'}}>
-              {sectionData[modalImageIndex].features[selectedFeatureIndex]?.description
-                ?.split('\n')
-                .map((line, idx) => (
-                  <span key={idx}>
-                    {line}
-                    <br />
-                  </span>
-                ))}
-            </p>
-
-            <div className="model-card-nav">
-              <button
-                onClick={() =>
-                  setSelectedFeatureIndex((prev) =>
-                    prev > 0
-                      ? prev - 1
-                      : sectionData[modalImageIndex].features.length - 1
-                  )
-                }
-              >
-                ⬅
-              </button>
-
-              <span>
-                {selectedFeatureIndex + 1} of {sectionData[modalImageIndex].features.length}
-              </span>
-
-              <button
-                onClick={() =>
-                  setSelectedFeatureIndex((prev) =>
-                    prev < sectionData[modalImageIndex].features.length - 1
-                      ? prev + 1
-                      : 0
-                  )
-                }
-              >
-                ➡
-              </button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+          )}
         </div>
       </div>
     </div>
